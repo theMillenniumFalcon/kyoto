@@ -8,7 +8,7 @@ dependencies = [
     "anthropic>=0.25.0",
 
     # Vector DB
-    "pinecone-client>=3.0.0",
+    "pinecone>=5.0.0",
 
     # Embeddings
     "voyageai>=0.2.0",
