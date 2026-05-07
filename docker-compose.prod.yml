@@ -1,0 +1,42 @@
+# Production overrides.
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#
+# Differences from dev:
+#   - No source mounts (image is the source of truth)
+#   - API runs without --reload, with multiple uvicorn workers
+#   - Celery concurrency increased
+#   - Redis persistence enabled (AOF)
+
+services:
+
+  redis:
+    command: >
+      redis-server
+      --appendonly yes
+      --appendfsync everysec
+    # No external port exposure in prod — only reachable by other services
+    ports: []
+
+  api:
+    command: >
+      uvicorn src.api.main:app
+      --host 0.0.0.0
+      --port 8000
+      --workers 2
+      --no-access-log
+    deploy:
+      resources:
+        limits:
+          memory: 2g
+
+  worker:
+    command: >
+      celery -A src.worker.celery_app worker
+      --loglevel=warning
+      --concurrency=4
+      --queues=ingest
+    deploy:
+      resources:
+        limits:
+          memory: 4g

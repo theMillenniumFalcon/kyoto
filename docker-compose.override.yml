@@ -1,0 +1,23 @@
+# Development overrides — applied automatically by `docker compose up`.
+# Hot-reloads the API on code changes. NOT for production use.
+
+services:
+
+  api:
+    command: >
+      uvicorn src.api.main:app
+      --host 0.0.0.0
+      --port 8000
+      --reload
+    volumes:
+      - ./src:/app/src       # live-reload source
+      - ./scripts:/app/scripts
+      - ./eval:/app/eval
+      - bm25_index:/app/bm25_index
+
+  worker:
+    volumes:
+      - ./src:/app/src       # pick up code changes after container restart
+      - bm25_index:/app/bm25_index
+    environment:
+      CELERY_TASK_ALWAYS_EAGER: "false"

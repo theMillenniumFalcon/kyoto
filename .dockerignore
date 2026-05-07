@@ -1,0 +1,41 @@
+# Version control
+.git
+.gitignore
+
+# Secrets — never bake into image
+.env
+
+# Python artifacts
+__pycache__
+*.py[cod]
+*.pyo
+.pytest_cache
+.ruff_cache
+htmlcov
+.coverage
+
+# Virtual envs — image builds its own
+.venv
+venv
+env
+
+# uv cache
+.uv
+
+# Local model cache (cross-encoder downloads at runtime)
+models
+
+# Eval outputs
+eval/results.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode
+.idea
+*.swp
+
+# Temp clone dirs created by ingest.py
+/tmp

@@ -1,0 +1,70 @@
+# Kyoto — full local stack
+# Usage:
+#   cp .env.example .env        # fill in API keys
+#   docker compose up --build
+#
+# Services:
+#   api     — FastAPI on :8000
+#   worker  — Celery worker for async ingestion jobs
+#   redis   — broker + result backend for Celery
+
+services:
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      target: runtime
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file: .env
+    environment:
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      # Mount bm25_index.pkl so it survives restarts and is shared with the worker
+      - bm25_index:/app/bm25_index
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  worker:
+    build:
+      context: .
+      target: runtime
+    restart: unless-stopped
+    command: >
+      celery -A src.worker.celery_app worker
+      --loglevel=info
+      --concurrency=2
+      --queues=ingest
+    env_file: .env
+    environment:
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - bm25_index:/app/bm25_index
+
+volumes:
+  redis_data:
+  bm25_index:
