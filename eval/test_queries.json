@@ -1,0 +1,27 @@
+[
+  {
+    "question": "How does FastAPI handle request body validation?",
+    "ground_truth": "FastAPI uses Pydantic models for request body validation. When you declare a parameter with a Pydantic model type, FastAPI automatically validates incoming JSON against the schema.",
+    "relevant_files": ["fastapi/routing.py", "fastapi/dependencies/utils.py"]
+  },
+  {
+    "question": "Where is the OpenAPI schema generated?",
+    "ground_truth": "The OpenAPI schema is generated in fastapi/openapi/utils.py using the get_openapi function which collects route information.",
+    "relevant_files": ["fastapi/openapi/utils.py"]
+  },
+  {
+    "question": "How does FastAPI handle dependency injection?",
+    "ground_truth": "FastAPI uses a Depends() system for dependency injection. Dependencies are declared as function parameters and FastAPI resolves them automatically, supporting nested dependencies and async functions.",
+    "relevant_files": ["fastapi/dependencies/utils.py", "fastapi/params.py"]
+  },
+  {
+    "question": "How are HTTP exceptions raised and handled?",
+    "ground_truth": "FastAPI provides HTTPException which can be raised anywhere in a route. It accepts a status_code and detail. Exception handlers can be registered with @app.exception_handler to customise responses.",
+    "relevant_files": ["fastapi/exception_handlers.py", "fastapi/exceptions.py"]
+  },
+  {
+    "question": "How does path parameter type conversion work?",
+    "ground_truth": "FastAPI uses Python type annotations on path parameters to automatically convert and validate values. For example, an int annotation will coerce the string path segment to an integer and return a 422 if it fails.",
+    "relevant_files": ["fastapi/routing.py"]
+  }
+]

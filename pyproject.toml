@@ -6,45 +6,37 @@ requires-python = ">=3.11"
 dependencies = [
     # LLM
     "anthropic>=0.25.0",
-
     # Vector DB
     "pinecone>=5.0.0",
-
     # Embeddings
     "voyageai>=0.2.0",
-
     # Code parsing
     "tree-sitter>=0.23.0",
     "tree-sitter-python>=0.23.0",
     "tree-sitter-javascript>=0.23.0",
     "tree-sitter-typescript>=0.23.0",
-
     # Git ingestion
     "gitpython>=3.1.40",
     "PyGithub>=2.1.1",
-
     # Sparse search
     "rank-bm25>=0.2.2",
-
     # API server
     "fastapi>=0.110.0",
     "uvicorn[standard]>=0.29.0",
-
     # Async + task queue
     "celery>=5.3.6",
     "redis>=5.0.3",
-
     # Env + config
     "python-dotenv>=1.0.1",
     "pydantic-settings>=2.2.1",
-
     # Re-ranking
     "sentence-transformers>=2.7.0",
-
     # Utilities
     "tenacity>=8.2.3",
     "rich>=13.7.1",
     "tiktoken>=0.6.0",
+    "datasets>=4.8.5",
+    "ragas>=0.4.3",
 ]
 
 [project.optional-dependencies]
