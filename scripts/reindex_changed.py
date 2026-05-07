@@ -15,6 +15,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from rich.console import Console
 
 from src.ingestion.ast_parser import parse_file
+from src.ingestion.chunker import chunk_files
 from src.indexing.embedder import embed_chunks_batched
 from src.indexing.pinecone_store import upsert_chunks, get_or_create_index, _chunk_to_id
 
@@ -114,6 +115,8 @@ def reindex(repo_path: str, since: str, repo_name: str) -> None:
     if not all_chunks:
         console.print("[yellow]No chunks produced from changed files.[/yellow]")
         return
+
+    all_chunks = chunk_files(all_chunks)
 
     console.print(f"\n[cyan]Embedding {len(all_chunks)} chunks...[/cyan]")
     embeddings = embed_chunks_batched([c.code for c in all_chunks])
